@@ -1,0 +1,23 @@
+name: Docs
+
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '*/60 * * * *'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  sync:
+    name: Sync documents from upstream test repo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the test repo
+        uses: actions/checkout@v2
+        with:
+          - repository: carlaKC/test
+
+      - name: List files
+        run: ls
