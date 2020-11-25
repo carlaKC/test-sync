@@ -11,14 +11,34 @@ defaults:
     shell: bash
 
 jobs:
-  sync:
-    name: Sync documents from upstream test repo
+  loop:
+    name: Sync documents from upstream loop repo
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the test repo
+      - name: Checkout test-sync repo
         uses: actions/checkout@v2
         with:
-          - repository: carlaKC/test
+          path: test-sync
 
-      - name: List files
+      - name: Checkout loop repo
+        uses: actions/checkout@v2
+        with:
+          repository: lightninglabs/loop
+          path: loop
+
+      # TODO(carla): do a git diff and clean exit if there is no difference
+
+      - name: ls
         run: ls
+
+      - name: Clear our current loop docs
+        run: rm -rf test-sync/docs/loop
+
+      - name: Create loop docs dir
+        run: mkdir -p test-sync/docs/loop
+
+      - name: Clear our current loop docs
+        run: cp loop/docs/* test-sync/docs/loop/
+
+      - name: Commit loop files
+        run: git add . git commit -m "docs sync loop"
