@@ -8,6 +8,12 @@ fi
 # Move into the target directory.
 cd "$1" || exit 1
 
+staged=$(git status)
+if [ -z "$staged" ];
+  then echo "nothing to commit"
+  exit 0
+fi
+
 # Save our current git name/email so that we can reset if after we have
 # committed as the actions bot. This is for local dev, so you don't bork your
 # existing config.
