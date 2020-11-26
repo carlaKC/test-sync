@@ -2,10 +2,10 @@
 We have various requirements to sync things from one repo to another. Github does not currently support this. This repo has some examples of how we could achieve this. 
 
 ### Approach
-Schedule a workflow in the downstream repo which runs hourly (?) and performs the sync that is required. If required, these workflows can be manually triggered if we have a pressing need for up to date info.
+Schedule a workflow in the downstream repo which runs hourly (?) and performs the sync that is required. 
 
-For this demo, `carlaKC/test` is considered the upstream repo, and `carlaKC/test-sync` is considered to be the downstream repo. 
-
+If required, these workflows can be manually triggered if we have a pressing need for up to date info.
+To manually trigger a workflow on github go to Actions -> Docs -> [RunWork flow](https://github.com/carlaKC/test-sync/actions?query=workflow%3ADocs)
 
 ### Use Cases
 #### Docs Sync For Lightning Labs
