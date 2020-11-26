@@ -49,4 +49,4 @@ jobs:
         run: ./test-sync/scripts/docs_sync.sh docs pool test-sync
 
       - name: Commit changes
-        run: ./test-sync/scripts/commit.sh test-sync "actions - update documentation"
+        run: ./test-sync/scripts/commit.sh test-sync "update documentation"
