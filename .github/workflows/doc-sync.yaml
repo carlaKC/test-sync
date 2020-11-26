@@ -21,9 +21,6 @@ jobs:
           - {org: lightninglabs, repo: loop}
           - {org: lightninglabs, repo: pool}
     steps:
-      - name: ls
-        run: ls
-
       - name: Checkout test-sync repo
         uses: actions/checkout@v2
         with:
