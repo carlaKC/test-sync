@@ -45,6 +45,10 @@ git config --local user.email "action@github.com"
 git config --local user.name "Github Actions"
 git commit -m "docsync: from $2/$1" || exit 1
 
+# In case one of our other jobs has updated master, we fetch and rebase.
+git fetch origin
+git rebase origin/master
+
 # Push these changes to master.
 git push || exit 1
 
