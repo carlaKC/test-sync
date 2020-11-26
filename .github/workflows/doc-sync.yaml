@@ -26,19 +26,5 @@ jobs:
           repository: lightninglabs/loop
           path: loop
 
-      # TODO(carla): do a git diff and clean exit if there is no difference
-
-      - name: ls
-        run: ls
-
-      - name: Clear our current loop docs
-        run: rm -rf test-sync/docs/loop
-
-      - name: Create loop docs dir
-        run: mkdir -p test-sync/docs/loop
-
-      - name: Clear our current loop docs
-        run: cp loop/docs/* test-sync/docs/loop/
-
-      - name: Commit loop files
-        run: git add . git commit -m "docs sync loop"
+      - name: Diff and commit
+        run: ./test-sync/scripts/docs_sync.sh docs loop test-sync
