@@ -14,23 +14,39 @@ jobs:
   loop:
     name: Sync documents from upstream
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        cfg:
-          - {org: lightningnetwork, repo: lnd}
-          - {org: lightninglabs, repo: loop}
-          - {org: lightninglabs, repo: pool}
+
     steps:
       - name: Checkout test-sync repo
         uses: actions/checkout@v2
         with:
           path: test-sync
 
-      - name: Checkout ${{ matrix.cfg.repo }} repo
+      - name: Checkout lnd repo
         uses: actions/checkout@v2
         with:
-          repository: ${{ matrix.cfg.org }}/${{ matrix.cfg.repo }}
-          path: ${{ matrix.cfg.repo }}
+          repository: lightningnetwork/lnd
+          path: lnd
 
-      - name: Diff and commit
-        run: ./test-sync/scripts/docs_sync.sh docs ${{ matrix.cfg.repo }} test-sync
+      - name: Checkout loop repo
+        uses: actions/checkout@v2
+        with:
+          repository: lightninglabs/loop
+          path: loop
+
+      - name: Checkout pool repo
+        uses: actions/checkout@v2
+        with:
+          repository: lightninglabs/pool
+          path: pool
+
+      - name: Sync lnd
+        run: ./test-sync/scripts/docs_sync.sh docs lnd test-sync
+
+      - name: Sync loop
+        run: ./test-sync/scripts/docs_sync.sh docs loop test-sync
+
+      - name: Sync pool
+        run: ./test-sync/scripts/docs_sync.sh docs pool test-sync
+
+      - name: Commit changes
+        run: ./test-sync/scripts/commit.sh test-sync "actions - update documentation"
