@@ -35,7 +35,9 @@ cp -rf "$upstreamDir"/* "$downstreamDir"
 cd "$3" || exit 1
 
 git add .
-git commit -m "docsync: from $2/$1" --author "GitHub Action <actions@github.com>" || exit 1
+git config --local user.email "action@github.com"
+git config --local user.name "Github Actions"
+git commit -m "docsync: from $2/$1" || exit 1
 
 # Push these changes to master.
 git push || exit 1
