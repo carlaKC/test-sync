@@ -1,0 +1,52 @@
+name: Docs
+
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '*/60 * * * *'
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  loop:
+    name: Generate protos
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout test-sync repo
+        uses: actions/checkout@v2
+        with:
+          path: test-sync
+
+      - name: Checkout lnd repo
+        uses: actions/checkout@v2
+        with:
+          repository: lightningnetwork/lnd
+          path: lnd
+
+      - name: Checkout loop repo
+        uses: actions/checkout@v2
+        with:
+          repository: lightninglabs/loop
+          path: loop
+
+      - name: Checkout pool repo
+        uses: actions/checkout@v2
+        with:
+          repository: lightninglabs/pool
+          path: pool
+
+      - name: Sync lnd
+        run: ./test-sync/scripts/sync.sh lnrpc lnd test-sync proto
+
+      - name: Sync loop
+        run: ./test-sync/scripts/sync.sh looprpc loop test-sync proto
+
+      - name: Sync pool
+        run: ./test-sync/scripts/sync.sh poolrpc pool test-sync proto
+
+      - name: Commit changes
+        run: ./test-sync/scripts/commit.sh test-sync "generate protos"
