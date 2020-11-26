@@ -16,17 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        repo:
-          - lnd
-          - loop
-          - pool
-        include:
-          - repo: lnd
-            ORG=lightningnetwork
-          - repo: pool
-            ORG=lightninglabs
-          - repo: loop
-            ORG=lightninglabs
+        cfg:
+          - {org: lightningnetwork, repo: lnd}
+          - {org: lightninglabs, repo: loop}
+          - {org: lightninglabs, repo: pool}
     steps:
       - name: ls
         run: ls
@@ -36,11 +29,11 @@ jobs:
         with:
           path: test-sync
 
-      - name: Checkout ${{ matrix.repo }} repo
+      - name: Checkout ${{ matrix.cfg.repo }} repo
         uses: actions/checkout@v2
         with:
-          repository: ${{ matrix.ORG }}/${{ matrix.repo }}
-          path: ${{ matrix.repo }}
+          repository: ${{ matrix.cfg.org }}/${{ matrix.cfg.repo }}
+          path: ${{ matrix.cfg.repo }}
 
       - name: Diff and commit
-        run: ./test-sync/scripts/docs_sync.sh docs ${{ matrix.repo }} test-sync
+        run: ./test-sync/scripts/docs_sync.sh docs ${{ matrix.cfg.repo }} test-sync
