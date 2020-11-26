@@ -16,7 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        repo: [ lnd, loop , pool ]
+        repo:
+          - lnd
+          - loop
+          - pool
         include:
           - repo: lnd
             ORG=lightningnetwork
