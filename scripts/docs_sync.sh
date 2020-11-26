@@ -22,7 +22,7 @@ diff=$(git diff "$upstreamDir" "$downstreamDir" )
 if [ -z "$diff" ];
     then
       echo "No difference in docs folder"
-      exit 1
+      exit 0
 
     else
       echo "Docs differ, syncing documents"
