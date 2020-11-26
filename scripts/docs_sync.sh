@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ $# -ne 4 ];
-    then echo "target directory, upstream + downstream repo required, and file type required"
+    then echo "target directory, upstream + downstream repo required, and file extension required"
     exit 1
 fi
 
@@ -29,4 +29,4 @@ if [ -z "$diff" ];
 fi
 
 # Copy everything from upstream to downstream, replacing what's there.
-cp -rf "$upstreamDir"/"$4" "$downstreamDir"
+cp -rf "$upstreamDir"/*."$4" "$downstreamDir"

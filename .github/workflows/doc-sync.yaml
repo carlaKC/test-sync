@@ -40,13 +40,13 @@ jobs:
           path: pool
 
       - name: Sync lnd
-        run: ./test-sync/scripts/docs_sync.sh docs lnd test-sync "*.md"
+        run: ./test-sync/scripts/docs_sync.sh docs lnd test-sync md
 
       - name: Sync loop
-        run: ./test-sync/scripts/docs_sync.sh docs loop test-sync "*.md"
+        run: ./test-sync/scripts/docs_sync.sh docs loop test-sync md
 
       - name: Sync pool
-        run: ./test-sync/scripts/docs_sync.sh docs pool test-sync "*.md"
+        run: ./test-sync/scripts/docs_sync.sh docs pool test-sync md
 
       - name: Commit changes
         run: ./test-sync/scripts/commit.sh test-sync "update documentation"
