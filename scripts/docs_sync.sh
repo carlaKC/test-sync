@@ -40,10 +40,6 @@ cd "$3" || exit 1
 me=$(git config --local user.name)
 myEmail=$(git config --local user.email)
 
-# Since our actions may run at the same time, we pull right before commit
-# so that we can push to the repo cleanly.
-git pull
-
 git add .
 git config --local user.email "action@github.com"
 git config --local user.name "Github Actions"
