@@ -15,6 +15,9 @@ jobs:
     name: Sync documents from upstream loop repo
     runs-on: ubuntu-latest
     steps:
+      - name: ls
+        run: ls
+
       - name: Checkout test-sync repo
         uses: actions/checkout@v2
         with:
@@ -26,5 +29,12 @@ jobs:
           repository: lightninglabs/loop
           path: loop
 
-      - name: Diff and commit
+      - name: Diff and copy
         run: ./test-sync/scripts/docs_sync.sh docs loop test-sync
+
+      - name: Commit files
+          run:
+            cd test-sync
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git commit -m "docsync: loop" -a

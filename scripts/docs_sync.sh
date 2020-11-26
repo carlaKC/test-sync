@@ -30,10 +30,3 @@ fi
 
 # Copy everything from upstream to downstream, replacing what's there.
 cp -rf "$upstreamDir"/* "$downstreamDir" || exit 1
-
-# Now we want to commit these changes to our downstream repo.
-cd "$3" || exit 1
-
-git add .
-git commit -m "docsync: $downstreamPath at $(date)"
-
