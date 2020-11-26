@@ -29,12 +29,5 @@ jobs:
           repository: lightninglabs/loop
           path: loop
 
-      - name: Diff and copy
+      - name: Diff and commit
         run: ./test-sync/scripts/docs_sync.sh docs loop test-sync
-
-      - name: Commit files
-          run:
-            cd test-sync
-            git config --local user.email "action@github.com"
-            git config --local user.name "GitHub Action"
-            git commit -m "docsync: loop" -a

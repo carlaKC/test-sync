@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [ $# -ne 3 ];
     then echo "target directory, upstream and downstream repo required"
     exit 1
@@ -29,4 +31,13 @@ if [ -z "$diff" ];
 fi
 
 # Copy everything from upstream to downstream, replacing what's there.
-cp -rf "$upstreamDir"/* "$downstreamDir" || exit 1
+cp -rf "$upstreamDir"/* "$downstreamDir"
+
+# Move into the downstream directory and commit our changes.
+cd "$3"
+
+git add .
+git commit -m "docsync: from $2/$1" --author "GitHub Action <actions@github.com>"
+
+# Push these changes to master.
+git push
