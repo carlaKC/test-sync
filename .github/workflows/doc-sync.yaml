@@ -12,14 +12,18 @@ defaults:
 
 jobs:
   loop:
-    name: Sync documents from lightning labs repos
+    name: Sync documents from upstream
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        repo:
-          - loop
-          - pool
-
+        repo: [ lnd, loop , pool ]
+        include:
+          - repo: lnd
+            ORG=lightningnetwork
+          - repo: pool
+            ORG=lightninglabs
+          - repo: loop
+            ORG=lightninglabs
     steps:
       - name: ls
         run: ls
@@ -32,7 +36,7 @@ jobs:
       - name: Checkout ${{ matrix.repo }} repo
         uses: actions/checkout@v2
         with:
-          repository: lightninglabs/${{ matrix.repo }}
+          repository: ${{ matrix.ORG }}/${{ matrix.repo }}
           path: ${{ matrix.repo }}
 
       - name: Diff and commit
