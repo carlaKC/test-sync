@@ -39,6 +39,12 @@ jobs:
           repository: lightninglabs/pool
           path: pool
 
+      - name: Checkout faraday repo
+        uses: actions/checkout@v2
+        with:
+          repository: lightninglabs/faraday
+          path: faraday
+
       - name: Sync lnd
         run: ./test-sync/scripts/sync.sh docs lnd test-sync md
 
@@ -47,6 +53,9 @@ jobs:
 
       - name: Sync pool
         run: ./test-sync/scripts/sync.sh docs pool test-sync md
+
+      - name: Sync faraday
+        run: ./test-sync/scripts/sync.sh docs faraday test-sync md
 
       - name: Commit changes
         run: ./test-sync/scripts/commit.sh test-sync "update documentation"
