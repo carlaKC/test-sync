@@ -1,9 +1,10 @@
 name: Docs
 
 on:
-  schedule:
+  # TODO(carla): uncomment this once done with demo
+  # schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '*/60 * * * *'
+    #- cron:  '*/60 * * * *'
   workflow_dispatch:
 
 defaults:
