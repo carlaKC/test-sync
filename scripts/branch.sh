@@ -17,19 +17,22 @@ mkdir -p "$destDir"
 
 # Check whether there is any difference between our source docs folder and our
 # current copy, exiting early if there is no difference.
-diff=$( diff "$sourceDir" "$destDir" )
-if [ -z "$diff" ];
-    then
-      echo "No difference in docs folder"
-      exit 0
+for file in "$sourceDir"/*
+do
+    # Get the file name from the path.
+    fname=$(basename "$file")
 
-    else
-      echo "Docs differ, syncing documents"
-fi
+    diff=$( diff "$file" "$destDir"/"$fname" )
+    if [ -n "$diff" ];
+        then
+          echo "Doc: $fname differs, syncing documents"
 
-# Set an output that the rest of our workflow can use to determine whether
-# to proceed.
-echo ::set-output name=have_diff::"true"
+          # Set an output that the rest of our workflow can use to determine
+          # whether to proceed.
+          echo ::set-output name=have_diff::"true"
+          break
+    fi
+done
 
 # Copy everything from source to destination, replacing what's there.
 cp -rf "$sourceDir"/* "$destDir"
