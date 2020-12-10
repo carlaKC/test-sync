@@ -41,9 +41,8 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           commit-message: update documentation
-          title: Update ${{ matrix.cfg.src }} documentation
-          body: This PR was created to automatically sync ${{ matrix.cfg.src }} documentation.
-          branch: docs-${{ matrix.cfg.src }}
+          title: Update ${{ matrix.cfg.repo }} documentation
+          body: This PR was created to automatically sync ${{ matrix.cfg.repo }} documentation.
           base: master
 
       - name: Check outputs
