@@ -1,4 +1,4 @@
-# Connecting LiT to a standalone LND process
+# Connecting LiT to a standalone LND process UGH
 
 By default LiT assumes that `lnd` is running as a standalone process locally. However
 `litd` can connect to `lnd` running on a remote host.
@@ -13,9 +13,6 @@ tlsextraip=<externally-reachable-ip-address>
 rpclisten=0.0.0.0:10009
 ```
 
-Copy the following files that are located in your `~/.lnd/data/chain/bitcoin/mainnet`
-directory on your remote machine to `/some/folder/with/lnd/data/` on your local machine
-(where you’ll be running LiT):
 
 - tls.cert
 - admin.macaroon
