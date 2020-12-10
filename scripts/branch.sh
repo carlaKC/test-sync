@@ -29,13 +29,4 @@ fi
 
 # Copy everything from source to destination, replacing what's there.
 cp -rf "$sourceDir" "$destDir"
-
-# Create a branch for our change, commit changes and push branch.
-# TODO(carla): move the cd out of commit so we dont need this.
-cd "$3" || exit
-branch=docs-"$sourceDir"
-git checkout -b "$branch"
-cd .. || exit
-./test-sync/scripts/commit.sh test-sync "update documentation"
-
-git push --set-upstream origin "$branch"
+cd "$3" || exit 1

@@ -38,5 +38,17 @@ jobs:
       - name: Create branch
         run: ./test-sync/scripts/branch.sh ${{ matrix.cfg.repo }} ${{ matrix.cfg.src }} test-sync ${{ matrix.cfg.dest }}
 
-      - name: Commit changes
-        run: ./test-sync/scripts/commit.sh test-sync "update documentation"
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: update documentation
+          title: Update ${{ matrix.cfg.src }} documentation
+          body: This PR was created to automatically sync ${{ matrix.cfg.src }} documentation.
+          branch: docs-${{ matrix.cfg.src }}
+          base: master
+
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
