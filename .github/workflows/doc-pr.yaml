@@ -21,7 +21,7 @@ jobs:
       matrix:
         cfg:
           - { repo: lnd, org: lightningnetwork, src: docs, dest: advanced-best-practices }
-          - { repo: lightning-terminal, org: lightninglabs, src: docs, dest: intermediate-get-lit }
+          - { repo: lightning-terminal, org: lightninglabs, src: doc, dest: intermediate-get-lit }
 
     steps:
       - name: Checkout test-sync repo
