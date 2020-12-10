@@ -1,4 +1,4 @@
-name: Docs - experimental
+name: Sync Documents
 
 on:
   schedule:
@@ -19,43 +19,50 @@ jobs:
       # Allow other tests in the matrix to continue if one fails.
       fail-fast: false
       matrix:
-        cfg:
-          - { repo: lnd, org: lightningnetwork, src: docs, dest: advanced-best-practices }
-          - { repo: lightning-terminal, org: lightninglabs, src: doc, dest: intermediate-get-lit }
+        repo: [lnd, lightning-terminal]
+        include:
+          - repo: lnd
+            org: lightningnetwork
+            src: docs
+            dest: advanced-best-practices
+          - repo: lightning-terminal
+            org: lightninglabs
+            src: doc
+            dest: intermediate-get-lit
 
     steps:
-      - name: Checkout test-sync repo
+      - name: Checkout docs.lightning.engineering repo
         uses: actions/checkout@v2
 
-      - name: Checkout ${{ matrix.cfg.repo }} repo
+      - name: Checkout ${{ matrix.repo }} repo
         uses: actions/checkout@v2
         with:
-          repository: ${{ matrix.cfg.org }}/${{ matrix.cfg.repo }}
-          path: ${{ matrix.cfg.repo }}
+          repository: ${{ matrix.org }}/${{ matrix.repo }}
+          path: ${{ matrix.repo }}
 
-      - name: Create branch
-        run: ./scripts/branch.sh ${{ matrix.cfg.repo }} ${{ matrix.cfg.src }} ${{ matrix.cfg.dest }}
-        id: create-branch
+      - name: Pull code differences
+        run: ./scripts/diff.sh ${{ matrix.repo }} ${{ matrix.src }} ${{ matrix.dest }}
+        id: create-diff
 
       - name: Create Pull Request
-        if: steps.create-branch.outputs.have_diff == 'true'
+        if: steps.create-diff.outputs.have_diff == 'true'
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
           commit-message: update documentation
-          title: Update ${{ matrix.cfg.repo }} documentation
-          body: This PR was created to automatically sync ${{ matrix.cfg.repo }} documentation.
-          branch: docs-${{ matrix.cfg.repo }}
+          title: Update ${{ matrix.repo }} documentation
+          body: This PR was created to automatically sync ${{ matrix.repo }} documentation.
+          branch: docs-${{ matrix.repo }}
           base: master
 
       - name: Check outputs
-        if: steps.create-branch.outputs.have_diff == 'true'
+        if: steps.create-diff.outputs.have_diff == 'true'
         run: |
           echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
           echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
 
       - name: Merge Pull Request
-        if: steps.create-branch.outputs.have_diff == 'true'
+        if: steps.create-diff.outputs.have_diff == 'true'
         uses: juliangruber/merge-pull-request-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
