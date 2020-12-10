@@ -28,11 +28,13 @@ if [ -z "$diff" ];
 fi
 
 # Copy everything from source to destination, replacing what's there.
-cp -rf "$sourceDir"/*."$4" "$destDir"
+cp -rf "$sourceDir" "$destDir"
 
 # Create a branch for our change, commit changes and push branch.
+cd "$3" || exit
 branch=docs-"$sourceDir"
-git branch "$branch"
+git checkout -b "$branch"
+cd .. || exit
 ./test-sync/scripts/commit.sh test-sync "update documentation"
 
 git push --set-upstream origin "$branch"
