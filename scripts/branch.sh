@@ -17,7 +17,7 @@ mkdir -p "$destDir"
 
 # Check whether there is any difference between our source docs folder and our
 # current copy, exiting early if there is no difference.
-diff=$(git diff "$sourceDir" "$destDir" )
+diff=$( diff "$sourceDir" "$destDir" )
 if [ -z "$diff" ];
     then
       echo "No difference in docs folder"
