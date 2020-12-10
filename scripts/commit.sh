@@ -8,7 +8,7 @@ fi
 # Move into the target directory.
 cd "$1" || exit 1
 
-if [ -z $(git status --porcelain) ];
+if [ -z "$(git status --porcelain)" ];
   then echo "nothing to commit"
   exit 0
 fi
