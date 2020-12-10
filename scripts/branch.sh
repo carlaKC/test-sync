@@ -27,6 +27,10 @@ if [ -z "$diff" ];
       echo "Docs differ, syncing documents"
 fi
 
+# Set an output that the rest of our workflow can use to determine whether
+# to proceed.
+echo ::set-output name=have_diff::"true"
+
 # Copy everything from source to destination, replacing what's there.
 cp -rf "$sourceDir"/* "$destDir"
 rm -rf "$1"
