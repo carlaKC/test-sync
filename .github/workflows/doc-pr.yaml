@@ -32,6 +32,8 @@ jobs:
         with:
           repository: ${{ matrix.cfg.org }}/${{ matrix.cfg.repo }}
           path: ${{ matrix.cfg.repo }}
+      - name: temp ls
+        run: ls
 
       - name: Create branch
         run: ./scripts/branch.sh ${{ matrix.cfg.repo }} ${{ matrix.cfg.src }} ${{ matrix.cfg.dest }}
