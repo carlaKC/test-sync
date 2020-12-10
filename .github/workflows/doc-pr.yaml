@@ -37,9 +37,6 @@ jobs:
         run: ./scripts/branch.sh ${{ matrix.cfg.repo }} ${{ matrix.cfg.src }} ${{ matrix.cfg.dest }}
         id: create-branch
 
-      - name: Test output
-        run: echo {{ steps.create-branch.outputs.have_diff }}
-
       - name: Create Pull Request
         if: {{ steps.create-branch.outputs.have_diff }} == 'true'
         id: cpr
