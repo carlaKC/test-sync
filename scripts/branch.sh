@@ -1,15 +1,15 @@
 #!/bin/bash
 
-if [ $# -ne 4 ];
-    then echo "args required: source repo, source dir, target repo, target dir"
+if [ $# -ne 3 ];
+    then echo "args required: source repo, source dir, target dir"
     exit 1
 fi
 
 # We will get our files from the source repo/dir.
 sourceDir="$1"/"$2"
 
-# We will copy these files to destination repo/dir
-destDir="$3"/"$4"
+# We will copy these files to destination dir.
+destDir="$3"
 
 # Create our destination dir in case it does not yet exist, because we cannot
 # diff a directory that does not exist.
@@ -29,3 +29,4 @@ fi
 
 # Copy everything from source to destination, replacing what's there.
 cp -rf "$sourceDir" "$destDir"
+rm -rf "$1"

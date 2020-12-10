@@ -26,8 +26,6 @@ jobs:
     steps:
       - name: Checkout test-sync repo
         uses: actions/checkout@v2
-        with:
-          path: test-sync
 
       - name: Checkout ${{ matrix.cfg.repo }} repo
         uses: actions/checkout@v2
@@ -36,10 +34,9 @@ jobs:
           path: ${{ matrix.cfg.repo }}
 
       - name: Create branch
-        run: ./test-sync/scripts/branch.sh ${{ matrix.cfg.repo }} ${{ matrix.cfg.src }} test-sync ${{ matrix.cfg.dest }}
+        run: ./scripts/branch.sh ${{ matrix.cfg.repo }} ${{ matrix.cfg.src }} ${{ matrix.cfg.dest }}
 
       - name: Create Pull Request
-        working-directory: ./test-sync
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
