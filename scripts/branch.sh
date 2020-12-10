@@ -31,6 +31,8 @@ do
           # whether to proceed.
           echo ::set-output name=have_diff::"true"
           break
+        else
+          echo "No diff?"
     fi
 done
 
