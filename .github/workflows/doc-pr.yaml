@@ -39,6 +39,7 @@ jobs:
         run: ./test-sync/scripts/branch.sh ${{ matrix.cfg.repo }} ${{ matrix.cfg.src }} test-sync ${{ matrix.cfg.dest }}
 
       - name: Create Pull Request
+        working-directory: ./test-sync
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:

@@ -29,4 +29,3 @@ fi
 
 # Copy everything from source to destination, replacing what's there.
 cp -rf "$sourceDir" "$destDir"
-cd "$3" || exit 1
