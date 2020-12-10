@@ -36,6 +36,12 @@ jobs:
       - name: Create branch
         run: ./scripts/branch.sh ${{ matrix.cfg.repo }} ${{ matrix.cfg.src }} ${{ matrix.cfg.dest }}
 
+      # We get the current time so that our branches can have unique names.
+      # Otherwise, the pull request action will overwrite itself.
+      - name: Get current time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v3
@@ -43,6 +49,7 @@ jobs:
           commit-message: update documentation
           title: Update ${{ matrix.cfg.repo }} documentation
           body: This PR was created to automatically sync ${{ matrix.cfg.repo }} documentation.
+          branch: docs-${{ matrix.cfg.repo }}-${{ steps.current-time.outputs.time }}
           base: master
 
       - name: Check outputs
