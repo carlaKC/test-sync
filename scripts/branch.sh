@@ -36,4 +36,3 @@ done
 
 # Copy everything from source to destination, replacing what's there.
 cp -rf "$sourceDir"/* "$destDir"
-rm -rf "$1"
