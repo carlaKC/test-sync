@@ -37,8 +37,11 @@ jobs:
         run: ./scripts/branch.sh ${{ matrix.cfg.repo }} ${{ matrix.cfg.src }} ${{ matrix.cfg.dest }}
         id: create-branch
 
+      - name: Test output
+        run: echo {{ steps.create-branch.outputs.have_diff }}
+
       - name: Create Pull Request
-        if: {{ steps.create-branch.outputs.have_diff }}
+        if: {{ steps.create-branch.outputs.have_diff }} == 'true'
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
@@ -49,13 +52,13 @@ jobs:
           base: master
 
       - name: Check outputs
-        if: {{ steps.create-branch.outputs.have_diff }}
+        if: {{ steps.create-branch.outputs.have_diff }} == 'true'
         run: |
           echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
           echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
 
       - name: Merge Pull Request
-        if: {{ steps.create-branch.outputs.have_diff }}
+        if: {{ steps.create-branch.outputs.have_diff }} == 'true'
         uses: juliangruber/merge-pull-request-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
