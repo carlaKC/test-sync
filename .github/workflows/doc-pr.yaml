@@ -1,0 +1,42 @@
+name: Docs - experimental
+
+on:
+  # TODO(carla): uncomment this once done with demo
+  # schedule:
+  # * is a special character in YAML so you have to quote this string
+  #- cron:  '*/60 * * * *'
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  sync-docs:
+    name: Sync documents from upstream
+    runs-on: ubuntu-latest
+    strategy:
+      # Allow other tests in the matrix to continue if one fails.
+      fail-fast: false
+      matrix:
+        cfg:
+          - { repo: lnd, org: lightningnetwork, src: docs, dest: advanced-best-practices }
+          - { repo: lightning-terminal, org: lightninglabs, src: docs, dest: intermediate-get-lit }
+
+    steps:
+      - name: Checkout test-sync repo
+        uses: actions/checkout@v2
+        with:
+          path: test-sync
+
+      - name: Checkout ${{ matrix.cfg.repo }} repo
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ matrix.cfg.org }}/${{ matrix.cfg.repo }}
+          path: ${{ matrix.cfg.repo }}
+
+      - name: Create branch
+        run: ./test-sync/scripts/branch.sh ${{ matrix.cfg.repo }} ${{ matrix.cfg.src }} test-sync ${{ matrix.cfg.dest }}
+
+      - name: Commit changes
+        run: ./test-sync/scripts/commit.sh test-sync "update documentation"
