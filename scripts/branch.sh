@@ -15,26 +15,14 @@ destDir="$3"
 # diff a directory that does not exist.
 mkdir -p "$destDir"
 
-# Check whether there is any difference between our source docs folder and our
-# current copy, exiting early if there is no difference.
-for file in "$sourceDir"/*
-do
-    # Get the file name from the path.
-    fname=$(basename "$file")
-
-    diff=$( diff "$file" "$destDir"/"$fname" )
-    if [ -n "$diff" ];
-        then
-          echo "Doc: $fname differs, syncing documents"
-
-          # Set an output that the rest of our workflow can use to determine
-          # whether to proceed.
-          echo ::set-output name=have_diff::"true"
-          break
-        else
-          echo "No diff?"
-    fi
-done
-
 # Copy everything from source to destination, replacing what's there.
 cp -rf "$sourceDir"/* "$destDir"
+
+# Remove the source repo that we cloned.
+rm -rf "$1"
+
+# If our sync has resulted in any changes, set an output for the rest of our
+# workflow.
+if [ -n "$(git status --porcelain)" ];
+  then echo ::set-output name=have_diff::"true"
+fi
