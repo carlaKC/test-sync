@@ -28,5 +28,5 @@ if [ -z "$diff" ];
 fi
 
 # Copy everything from source to destination, replacing what's there.
-cp -rf "$sourceDir" "$destDir"
+cp -rf "$sourceDir"/* "$destDir"
 rm -rf "$1"
