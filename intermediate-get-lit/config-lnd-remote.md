@@ -1,4 +1,4 @@
-# Connecting LiT to a standalone LND process UGH
+# Connecting LiT to a standalone LND process
 
 By default LiT assumes that `lnd` is running as a standalone process locally. However
 `litd` can connect to `lnd` running on a remote host.
@@ -8,20 +8,20 @@ By default LiT assumes that `lnd` is running as a standalone process locally. Ho
 To connect Lightning Terminal to a remote LND instance first make sure your `lnd.conf`
 file contains the following additional configuration settings:
 
-```
+```text
 tlsextraip=<externally-reachable-ip-address>
 rpclisten=0.0.0.0:10009
 ```
 
+Copy the following files that are located in your `~/.lnd/data/chain/bitcoin/mainnet`
+directory on your remote machine to `/some/folder/with/lnd/data/` on your local machine
+(where you’ll be running LiT):
 
 - tls.cert
 - admin.macaroon
-- chainnotifier.macaroon
-- invoices.macaroon
-- readonly.macaroon
-- router.macaroon
-- signer.macaroon
-- walletkit.macaroon
+
+(Note that with LiT prior to `v0.3.5-alpha` all `*.macaroon` files need to be
+copied from the lnd machine.)
 
 Create a `lit.conf` file. The default location LiT will look for the configuration file
 depends on your operating system:
@@ -33,16 +33,16 @@ depends on your operating system:
 Alternatively you can specify a different location by passing `--lit-dir=~/.lit`. After
 creating `lit.conf` populate it with the following configuration settings:
 
-```
+```text
 remote.lnd.rpcserver=<externally-reachable-ip-address>:10009
-remote.lnd.macaroondir=/some/folder/with/lnd/data
+remote.lnd.macaroonpath=/some/folder/with/lnd/data/admin.macaroon
 remote.lnd.tlscertpath=/some/folder/with/lnd/data/tls.cert
 ```
 
 Run LiT:
 
-```
-./litd --uipassword=UP48lm4VjqxmOxB9X9stry6VTKBRQI
+```shell
+⛰  ./litd --uipassword=UP48lm4VjqxmOxB9X9stry6VTKBRQI
 ```
 
 Visit https://localhost:8443 to access LiT.
@@ -72,8 +72,8 @@ To see all available command line options, run `litd --help`.
 The most minimal example command to start `litd` and connect it to a local `lnd`
 node that is running with default configuration settings is:
 
-```shell script
-$ litd --uipassword=My$trongP@ssword
+```shell
+⛰  litd --uipassword=My$trongP@ssword
 ```
 
 All other command line flags are only needed to overwrite the default behavior.
@@ -82,9 +82,9 @@ Here is an example command to start `litd` connected to a testnet `lnd` that is
 running on another host and overwrites a few default settings in `loop`, `pool`,
 and `faraday` (optional):
 
-```shell script
-$ litd \
-  --httpslisten=0.0.0.0:443 \
+```shell
+⛰  litd \
+  --httpslisten=0.0.0.0:8443 \
   --uipassword=My$trongP@ssword \
   --letsencrypt \
   --letsencrypthost=loop.merchant.com \
@@ -92,7 +92,7 @@ $ litd \
   --remote.lit-debuglevel=debug \
   --remote.lnd.network=testnet \
   --remote.lnd.rpcserver=some-other-host:10009 \
-  --remote.lnd.macaroondir=/some/folder/with/lnd/data \
+  --remote.lnd.macaroonpath=/some/folder/with/lnd/data/admin.macaroon \
   --remote.lnd.tlscertpath=/some/folder/with/lnd/data/tls.cert \
   --loop.loopoutmaxparts=5 \
   --pool.newnodesonly=true \
@@ -102,12 +102,6 @@ $ litd \
   --faraday.bitcoin.user=testnetuser \
   --faraday.bitcoin.password=testnetpw
 ```
-
-NOTE: Even though LiT itself only needs `lnd`'s `admin.macaroon`, the `loop`,
-`pool`, and `faraday` daemons will require other macaroons and will look for
-them in the folder specified with `--remote.lnd.macaroondir`. It is advised to
-copy all `*.macaroon` files and the `tls.cert` file from the remote host to the
-host that is running `litd`.
 
 ## Use a configuration file
 
@@ -136,7 +130,7 @@ running on another host and overwrites a few default settings in `loop`, `pool`,
 
 ```text
 # Application Options
-httpslisten=0.0.0.0:443
+httpslisten=0.0.0.0:8443
 uipassword=My$trongP@ssword
 letsencrypt=true
 letsencrypthost=loop.merchant.com
@@ -148,7 +142,7 @@ remote.lit-debuglevel=debug
 # Remote lnd options
 remote.lnd.network=testnet
 remote.lnd.rpcserver=some-other-host:10009
-remote.lnd.macaroondir=/some/folder/with/lnd/data
+remote.lnd.macaroonpath=/some/folder/with/lnd/data/admin.macaroon
 remote.lnd.tlscertpath=/some/folder/with/lnd/data/tls.cert
 
 # Loop
@@ -184,17 +178,17 @@ reasons for the extra flags. The examples assume that LiT is started with the fo
 configuration (only relevant parts shown here):
 
 ```text
-httpslisten=0.0.0.0:443
+httpslisten=0.0.0.0:8443
 lit-dir=~/.lit
 
 remote.lnd.network=testnet
 remote.lnd.rpcserver=some-other-host:10009
-remote.lnd.macaroondir=/some/folder/with/lnd/data
+remote.lnd.macaroonpath=/some/folder/with/lnd/data/admin.macaroon
 remote.lnd.tlscertpath=/some/folder/with/lnd/data/tls.cert
 ```
 
 Because in the remote `lnd` mode all other LiT components (`loop`, `pool`,
-`faraday` and the UI server) listen on the same port (`443` in this example) and
+`faraday` and the UI server) listen on the same port (`8443` in this example) and
 use the same TLS certificate (`~/.lit/tls.cert` in this example), some command
 line calls now need some extra options that weren't necessary before.
 
@@ -210,8 +204,8 @@ implied by looking inside the default directories for that network. Or you speci
 The `lncli` commands in the "remote" mode are the same as if `lnd` was running standalone
 on a remote host. We need to specify all flags explicitly.
 
-```shell script
-$ lncli --rpcserver=some-other-host:10009 \
+```shell
+⛰  lncli --rpcserver=some-other-host:10009 \
   --tlscertpath=/some/folder/with/lnd/data/tls.cert \
   --macaroonpath=/some/folder/with/lnd/data/admin.macaroon \
   getinfo
@@ -224,8 +218,8 @@ the same port as the UI server. That's why we have to both specify the `host:por
 as the TLS certificate of LiT. But `loopd` verifies its own macaroon, so we have to
 specify that one from the `.loop` directory.
 
-```shell script
-$ loop --rpcserver=localhost:443 --tlscertpath=~/.lit/tls.cert \
+```shell
+⛰  loop --rpcserver=localhost:8443 --tlscertpath=~/.lit/tls.cert \
   --macaroonpath=~/.loop/testnet/loop.macaroon \
   quote out 500000
 ```
@@ -233,8 +227,8 @@ $ loop --rpcserver=localhost:443 --tlscertpath=~/.lit/tls.cert \
 You can easily create an alias for this by adding the following line to your `~/.bashrc`
 file:
 
-```shell script
-alias lit-loop="loop --rpcserver=localhost:443 --tlscertpath=~/.lit/tls.cert --macaroonpath=~/.loop/testnet/loop.macaroon"
+```shell
+⛰  alias lit-loop="loop --rpcserver=localhost:8443 --tlscertpath=~/.lit/tls.cert --macaroonpath=~/.loop/testnet/loop.macaroon"
 ```
 
 ### Example `pool` command
@@ -243,8 +237,8 @@ Again, `poold` also runs on the same port as the UI server and we have to
 specify the `host:port` and the TLS certificate of LiT but use the macaroon from
 the `.pool` directory.
 
-```shell script
-$ pool --rpcserver=localhost:443 --tlscertpath=~/.lit/tls.cert \
+```shell
+⛰  pool --rpcserver=localhost:8443 --tlscertpath=~/.lit/tls.cert \
   --macaroonpath=~/.pool/testnet/pool.macaroon \
   accounts list
 ```
@@ -252,8 +246,8 @@ $ pool --rpcserver=localhost:443 --tlscertpath=~/.lit/tls.cert \
 You can easily create an alias for this by adding the following line to your
 `~/.bashrc` file:
 
-```shell script
-alias lit-pool="pool --rpcserver=localhost:443 --tlscertpath=~/.lit/tls.cert --macaroonpath=~/.pool/testnet/pool.macaroon"
+```shell
+⛰  alias lit-pool="pool --rpcserver=localhost:8443 --tlscertpath=~/.lit/tls.cert --macaroonpath=~/.pool/testnet/pool.macaroon"
 ```
 
 ### Example `frcli` command
@@ -261,8 +255,8 @@ alias lit-pool="pool --rpcserver=localhost:443 --tlscertpath=~/.lit/tls.cert --m
 Faraday's command line tool follows the same pattern as loop. We also have to specify the
 server and TLS flags for `lnd` but use `faraday`'s macaroon:
 
-```shell script
-$ frcli --rpcserver=localhost:443 --tlscertpath=~/.lit/tls.cert \
+```shell
+⛰  frcli --rpcserver=localhost:8443 --tlscertpath=~/.lit/tls.cert \
   --macaroonpath=~/.faraday/testnet/faraday.macaroon \
   audit
 ```
@@ -270,6 +264,18 @@ $ frcli --rpcserver=localhost:443 --tlscertpath=~/.lit/tls.cert \
 You can easily create an alias for this by adding the following line to your `~/.bashrc`
 file:
 
-```shell script
-alias lit-frcli="frcli --rpcserver=localhost:443 --tlscertpath=~/.lit/tls.cert --macaroonpath=~/.faraday/testnet/faraday.macaroon"
+```shell
+⛰  alias lit-frcli="frcli --rpcserver=localhost:8443 --tlscertpath=~/.lit/tls.cert --macaroonpath=~/.faraday/testnet/faraday.macaroon"
+```
+
+## Shutting down LiT
+
+In the remote mode, there is no explicit command for stopping LiT yet. But a
+clean shutdown can be achieved by either pressing `<Ctrl> + c` in the terminal
+where LiT is running. Or, if LiT is running in the background, the following
+command can be used to send an interrupt signal which will trigger the clean
+shutdown:
+
+```shell
+⛰  kill -s INT $(pidof litd)
 ```
