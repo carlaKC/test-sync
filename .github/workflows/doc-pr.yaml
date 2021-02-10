@@ -1,10 +1,10 @@
 name: Sync Documents
 
 on:
-  schedule:
+    # schedule:
     # Run this workflow automatically once a day at midnight.
     # * is a special character in YAML so you have to quote this string
-    - cron: '0 0 * * *'
+    #    - cron: '0 0 * * *'
   workflow_dispatch:
 
 defaults:
@@ -53,6 +53,7 @@ jobs:
           title: Update ${{ matrix.repo }} documentation
           body: This PR was created to automatically sync ${{ matrix.repo }} documentation.
           branch: docs-${{ matrix.repo }}
+          author: GitHub <noreply@github.com>
           base: master
 
       - name: Check outputs
